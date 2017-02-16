@@ -17,7 +17,7 @@ proc-macro = true
 
 [dependencies]
 quote = "0.3.8"
-syn = "*"
+syn = "0.11.4"
 
 [dev-dependencies]
 bitsparrow = "2.0.0-rc1"
