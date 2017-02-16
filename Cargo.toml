@@ -20,4 +20,4 @@ quote = "0.3.8"
 syn = "*"
 
 [dev-dependencies]
-bitsparrow = { path = "../bitsparrow-rust" }
+bitsparrow = "2.0.0-rc1"
