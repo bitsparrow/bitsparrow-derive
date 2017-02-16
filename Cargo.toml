@@ -1,15 +1,12 @@
 [package]
 name = "bitsparrow-derive"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["maciej.hirsz@gmail.com"]
-description = "#[derive] macro for BitSparrow implementation in Rust"
+description = "Derive macros for BitSparrow implementation in Rust"
 homepage = "http://bitsparrow.io/"
-documentation = "http://bitsparrow.io/doc/bitsparrow/"
-repository = "https://github.com/bitsparrow/bitsparrow-rust"
+# documentation = "http://bitsparrow.io/doc/bitsparrow/"
+repository = "https://github.com/bitsparrow/bitsparrow-derive"
 license = "MIT"
-
-[features]
-unstable = []
 
 [lib]
 name = "bitsparrow_derive"
