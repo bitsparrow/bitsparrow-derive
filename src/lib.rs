@@ -60,21 +60,27 @@ mod decode;
 use proc_macro::TokenStream;
 use encode::{encode_struct, encode_enum};
 use decode::{decode_struct, decode_enum};
-use syn::Body;
+use syn::{Body, LifetimeDef};
 
 #[proc_macro_derive(BitEncode)]
 pub fn derive_encode(input: TokenStream) -> TokenStream {
     let input = syn::parse_derive_input(&input.to_string()).unwrap();
 
-    let ident = input.ident;
+    let name = input.ident;
+    let (impl_generics, ty_generics, where_clause) = input.generics.split_for_impl();
+
+    let ref_lifetime = LifetimeDef::new("'bit_encode_ref");
+    let mut ref_generics = input.generics.clone();
+    ref_generics.lifetimes.insert(0, ref_lifetime.clone());
+    let (ref_impl_generics, _, _) = ref_generics.split_for_impl();
 
     let (size_hint, body) = match input.body {
         Body::Struct(body) => encode_struct(body),
-        Body::Enum(variants) => encode_enum(&ident, variants),
+        Body::Enum(variants) => encode_enum(&name, variants),
     };
 
     let tokens = quote! {
-        impl BitEncode for #ident {
+        impl #impl_generics BitEncode for #name #ty_generics #where_clause {
             fn encode(&self, e: &mut Encoder) {
                 #body
             }
@@ -85,7 +91,7 @@ pub fn derive_encode(input: TokenStream) -> TokenStream {
             }
         }
 
-        impl<'a> BitEncode for &'a #ident {
+        impl #ref_impl_generics BitEncode for & #ref_lifetime #name #ty_generics #where_clause {
             #[inline]
             fn encode(&self, e: &mut Encoder) {
                 BitEncode::encode(*self, e)
@@ -105,16 +111,27 @@ pub fn derive_encode(input: TokenStream) -> TokenStream {
 pub fn derive_decode(input: TokenStream) -> TokenStream {
     let input = syn::parse_derive_input(&input.to_string()).unwrap();
 
-    let ident = input.ident;
+    let name = input.ident;
+    let (_, ty_generics, where_clause) = input.generics.split_for_impl();
+    let mut generics = input.generics.clone();
+
+    match generics.lifetimes.len() {
+        0 => generics.lifetimes.insert(0, LifetimeDef::new("'src")),
+        1 => {},
+        _ => panic!("Cannot derive BitDecode for types with more than one lifetime"),
+    };
+
+    let lifetime = &generics.lifetimes[0];
+    let (impl_generics, _, _) = generics.split_for_impl();
 
     let body = match input.body {
-        Body::Struct(body) => decode_struct(&ident, body),
-        Body::Enum(variants) => decode_enum(&ident, variants),
+        Body::Struct(body) => decode_struct(&name, body),
+        Body::Enum(variants) => decode_enum(&name, variants),
     };
 
     let tokens = quote! {
-        impl BitDecode for #ident {
-            fn decode(d: &mut Decoder) -> Result<Self, Error> {
+        impl #impl_generics BitDecode<#lifetime> for #name #ty_generics #where_clause {
+            fn decode(d: &mut Decoder<#lifetime>) -> Result<Self, Error> {
                 Ok(#body)
             }
         }

@@ -1,15 +1,15 @@
 [root]
 name = "bitsparrow-derive"
-version = "0.1.0"
+version = "2.0.0-rc2"
 dependencies = [
- "bitsparrow 2.0.0-rc1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bitsparrow 2.0.0-rc2 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "syn 0.11.4 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "bitsparrow"
-version = "2.0.0-rc1"
+version = "2.0.0-rc2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -32,7 +32,7 @@ version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
-"checksum bitsparrow 2.0.0-rc1 (registry+https://github.com/rust-lang/crates.io-index)" = "789e6581e536d0ff3f3b8590f92d4580e5648791ac22f664b1933d43a60e3e22"
+"checksum bitsparrow 2.0.0-rc2 (registry+https://github.com/rust-lang/crates.io-index)" = "fb33eb5a5077e166a6ff2012cba435855ea5d2a60cd0c3ec37e485759902a6be"
 "checksum quote 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)" = "e7b44fd83db28b83c1c58187159934906e5e955c812e211df413b76b03c909a5"
 "checksum syn 0.11.4 (registry+https://github.com/rust-lang/crates.io-index)" = "f4f94368aae82bb29656c98443a7026ca931a659e8d19dcdc41d6e273054e820"
 "checksum unicode-xid 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)" = "8c1f860d7d29cf02cb2f3f359fd35991af3d30bac52c57d265a3c461074cb4dc"
