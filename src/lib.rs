@@ -80,8 +80,8 @@ pub fn derive_encode(input: TokenStream) -> TokenStream {
     };
 
     let tokens = quote! {
-        impl #impl_generics BitEncode for #name #ty_generics #where_clause {
-            fn encode(&self, e: &mut Encoder) {
+        impl #impl_generics ::bitsparrow::BitEncode for #name #ty_generics #where_clause {
+            fn encode(&self, e: &mut bitsparrow::Encoder) {
                 #body
             }
 
@@ -91,10 +91,10 @@ pub fn derive_encode(input: TokenStream) -> TokenStream {
             }
         }
 
-        impl #ref_impl_generics BitEncode for & #ref_lifetime #name #ty_generics #where_clause {
+        impl #ref_impl_generics ::bitsparrow::BitEncode for & #ref_lifetime #name #ty_generics #where_clause {
             #[inline]
             fn encode(&self, e: &mut Encoder) {
-                BitEncode::encode(*self, e)
+                ::bitsparrow::BitEncode::encode(*self, e)
             }
 
             #[inline]
@@ -130,8 +130,8 @@ pub fn derive_decode(input: TokenStream) -> TokenStream {
     };
 
     let tokens = quote! {
-        impl #impl_generics BitDecode<#lifetime> for #name #ty_generics #where_clause {
-            fn decode(d: &mut Decoder<#lifetime>) -> Result<Self, Error> {
+        impl #impl_generics ::bitsparrow::BitDecode<#lifetime> for #name #ty_generics #where_clause {
+            fn decode(d: &mut bitsparrow::Decoder<#lifetime>) -> Result<Self, ::bitsparrow::Error> {
                 Ok(#body)
             }
         }

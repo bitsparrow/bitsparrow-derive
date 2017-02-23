@@ -7,12 +7,12 @@ pub fn decode_struct(ident: &Ident, body: VariantData) -> Tokens {
             let fields = body
                 .iter()
                 .map(|field| &field.ident)
-                .map(|ident| quote! { #ident: BitDecode::decode(d)?, });
+                .map(|ident| quote! { #ident: ::bitsparrow::BitDecode::decode(d)?, });
 
             quote! { #ident{ #( #fields )* } }
         },
         VariantData::Tuple(ref body) => {
-            let fields = body.iter().map(|_| quote! { BitDecode::decode(d)? });
+            let fields = body.iter().map(|_| quote! { ::bitsparrow::BitDecode::decode(d)? });
 
             quote! { #ident( #( #fields )* ) }
         },
@@ -29,9 +29,9 @@ pub fn decode_enum(ident: &Ident, variants: Vec<Variant>) -> Tokens {
     });
 
     quote! {
-        match BitDecode::decode(d)? {
+        match ::bitsparrow::BitDecode::decode(d)? {
             #( #matches )*
-            _ => return Err(Error::InvalidData)
+            _ => return Err(::bitsparrow::Error::InvalidData)
         }
     }
 }

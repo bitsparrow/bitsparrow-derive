@@ -2,7 +2,7 @@ use quote::Tokens;
 use syn::{Ident, VariantData, Variant};
 
 fn encode_ident(ident: Ident) -> Tokens {
-    quote! { BitEncode::encode(&self.#ident, e); }
+    quote! { ::bitsparrow::BitEncode::encode(&self.#ident, e); }
 }
 
 pub fn encode_struct(mut body: VariantData) -> (usize, Tokens) {
@@ -41,8 +41,8 @@ pub fn encode_enum(ident: &Ident, variants: Vec<Variant>) -> (usize, Tokens) {
 
                 quote! {
                     #ident::#varident {#( ref #refs ),*} => {
-                        BitEncode::encode(&#index, e);
-                        #( BitEncode::encode(#refs, e); )*
+                        ::bitsparrow::BitEncode::encode(&#index, e);
+                        #( ::bitsparrow::BitEncode::encode(#refs, e); )*
                     },
                 }
             },
@@ -57,13 +57,13 @@ pub fn encode_enum(ident: &Ident, variants: Vec<Variant>) -> (usize, Tokens) {
 
                 quote! {
                     #ident::#varident(#( ref #refs ),*) => {
-                        BitEncode::encode(&#index, e);
-                        #( BitEncode::encode(#refs, e); )*
+                        ::bitsparrow::BitEncode::encode(&#index, e);
+                        #( ::bitsparrow::BitEncode::encode(#refs, e); )*
                     },
                 }
             },
             VariantData::Unit => quote! {
-                #ident::#varident => return BitEncode::encode(&#index, e),
+                #ident::#varident => return ::bitsparrow::BitEncode::encode(&#index, e),
             },
         }
     });

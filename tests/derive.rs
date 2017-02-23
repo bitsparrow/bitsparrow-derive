@@ -2,7 +2,7 @@ extern crate bitsparrow;
 #[macro_use]
 extern crate bitsparrow_derive;
 
-use bitsparrow::{Encoder, Decoder, BitEncode, BitDecode, Error};
+use bitsparrow::{Encoder, Decoder};
 
 #[derive(BitEncode, BitDecode, PartialEq, Debug)]
 struct Foo<'a> {

@@ -12,7 +12,7 @@ extern crate serde_derive;
 extern crate serde;
 extern crate bincode;
 
-use bitsparrow::{Encoder, Decoder, BitEncode, BitDecode, Error};
+use bitsparrow::{Encoder, Decoder};
 use bincode::{serialize, deserialize};
 use bincode::SizeLimit::Infinite;
 
