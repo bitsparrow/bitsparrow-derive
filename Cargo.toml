@@ -18,3 +18,6 @@ syn = "0.11.4"
 
 [dev-dependencies]
 bitsparrow = "2.0.0-rc2"
+serde = "0.9"
+serde_derive = "0.9"
+bincode = "1.0.0-alpha2"

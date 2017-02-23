@@ -2,7 +2,7 @@ extern crate bitsparrow;
 #[macro_use]
 extern crate bitsparrow_derive;
 
-use bitsparrow::*;
+use bitsparrow::{Encoder, Decoder, BitEncode, BitDecode, Error};
 
 #[derive(BitEncode, BitDecode, PartialEq, Debug)]
 struct Foo<'a> {
@@ -138,7 +138,7 @@ fn simple_enum() {
 
     let buffer = Encoder::encode(&hello);
 
-    let decoded: (Letter,Letter,Letter,Letter,Letter,Letter,Letter,Letter,Letter,Letter) = Decoder::decode(&buffer).unwrap();
+    let decoded = Decoder::decode(&buffer).unwrap();
 
     assert_eq!(buffer.len(), 10);
     assert_eq!(hello, decoded);

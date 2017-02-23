@@ -2,10 +2,19 @@
 
 extern crate test;
 extern crate bitsparrow;
+
 #[macro_use]
 extern crate bitsparrow_derive;
 
-use bitsparrow::*;
+#[macro_use]
+extern crate serde_derive;
+
+extern crate serde;
+extern crate bincode;
+
+use bitsparrow::{Encoder, Decoder, BitEncode, BitDecode, Error};
+use bincode::{serialize, deserialize};
+use bincode::SizeLimit::Infinite;
 
 use test::Bencher;
 
@@ -16,7 +25,7 @@ struct Foo<'a> {
     derp: bool,
 }
 
-#[derive(BitEncode, BitDecode, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, BitEncode, BitDecode, PartialEq, Debug)]
 struct OwnedFoo {
     bar: String,
     baz: u64,
@@ -24,7 +33,7 @@ struct OwnedFoo {
 }
 
 #[bench]
-fn encode_derived_struct(b: &mut Bencher) {
+fn borrow_encode_derived_struct(b: &mut Bencher) {
     let foo = Foo {
         bar: "hello",
         baz: 1337u64,
@@ -37,7 +46,7 @@ fn encode_derived_struct(b: &mut Bencher) {
 }
 
 #[bench]
-fn decode_derived_struct(b: &mut Bencher) {
+fn borrow_decode_derived_struct(b: &mut Bencher) {
     let foo = Foo {
         bar: "hello",
         baz: 1337u64,
@@ -52,7 +61,7 @@ fn decode_derived_struct(b: &mut Bencher) {
 }
 
 #[bench]
-fn encode_derived_owned_struct(b: &mut Bencher) {
+fn owned_encode_derived_struct(b: &mut Bencher) {
     let foo = OwnedFoo {
         bar: "hello".into(),
         baz: 1337u64,
@@ -65,7 +74,7 @@ fn encode_derived_owned_struct(b: &mut Bencher) {
 }
 
 #[bench]
-fn decode_derived_owned_struct(b: &mut Bencher) {
+fn owned_decode_derived_struct(b: &mut Bencher) {
     let foo = OwnedFoo {
         bar: "hello".into(),
         baz: 1337u64,
@@ -76,5 +85,33 @@ fn decode_derived_owned_struct(b: &mut Bencher) {
 
     b.iter(|| {
         let _owned_foo: OwnedFoo = Decoder::decode(&buffer).unwrap();
+    })
+}
+
+#[bench]
+fn bincode_encode_derived_owned_struct(b: &mut Bencher) {
+    let foo = OwnedFoo {
+        bar: "hello".into(),
+        baz: 1337u64,
+        derp: true,
+    };
+
+    b.iter(|| {
+        serialize(&foo, Infinite).unwrap()
+    })
+}
+
+#[bench]
+fn bincode_decode_derived_owned_struct(b: &mut Bencher) {
+    let foo = OwnedFoo {
+        bar: "hello".into(),
+        baz: 1337u64,
+        derp: true,
+    };
+
+    let buffer = serialize(&foo, Infinite).unwrap();
+
+    b.iter(|| {
+        let _owned_foo: OwnedFoo = deserialize(&buffer).unwrap();
     })
 }
