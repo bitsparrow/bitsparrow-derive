@@ -10,11 +10,10 @@ extern crate bitsparrow_derive;
 extern crate serde_derive;
 
 extern crate serde;
-extern crate bincode;
+extern crate serde_bench;
 
 use bitsparrow::{Encoder, Decoder};
-use bincode::{serialize, deserialize};
-use bincode::SizeLimit::Infinite;
+use serde_bench::{serialize, deserialize};
 
 use test::Bencher;
 
@@ -89,7 +88,7 @@ fn owned_decode_derived_struct(b: &mut Bencher) {
 }
 
 #[bench]
-fn bincode_encode_derived_owned_struct(b: &mut Bencher) {
+fn serde_encode_derived_owned_struct(b: &mut Bencher) {
     let foo = OwnedFoo {
         bar: "hello".into(),
         baz: 1337u64,
@@ -97,19 +96,19 @@ fn bincode_encode_derived_owned_struct(b: &mut Bencher) {
     };
 
     b.iter(|| {
-        serialize(&foo, Infinite).unwrap()
+        serialize(&foo).unwrap()
     })
 }
 
 #[bench]
-fn bincode_decode_derived_owned_struct(b: &mut Bencher) {
+fn serde_decode_derived_owned_struct(b: &mut Bencher) {
     let foo = OwnedFoo {
         bar: "hello".into(),
         baz: 1337u64,
         derp: true,
     };
 
-    let buffer = serialize(&foo, Infinite).unwrap();
+    let buffer = serialize(&foo).unwrap();
 
     b.iter(|| {
         let _owned_foo: OwnedFoo = deserialize(&buffer).unwrap();
